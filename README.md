@@ -94,7 +94,7 @@ npm install express passport passport-google-oauth20 dotenv ejs  # Installa Expr
 npm install express             # Installa Express.js (server web)  
 npm install express-session     # Installa express-session (gestione delle sessioni)  
 npm install mongoose            # Installa Mongoose (gestione database MongoDB)  
-npm install multer              # Installa Multer (gestione upload di file)  
+npm install multer              # Installa Multer (gestione upload di file)
 ```
 ---
 
@@ -106,6 +106,8 @@ GOOGLE_CLIENT_ID=<Client-ID>                    # ID client di Google OAuth 2.0
 GOOGLE_CLIENT_SECRET=<Client-Secret>            # Secret client di Google OAuth 2.0
 SESSION_SECRET=<Un-segreto-casuale>             # Chiave segreta per la gestione delle sessioni
 MONGODB_URI=mongodb://localhost:27017/todolist  # URI per connettersi al database MongoDB locale
+DB_USER=<Il-tuo-username-db>                    # Username Database Mongo
+DB_PASS=<La-tua-password-db>                    # Password Database Mongo
 ```
 ---
 
@@ -128,7 +130,7 @@ Operazioni principali:
 ![Logo](Google-credential.png)
 
 ---
-☸️ **Avvio MongoDB su container docker:**  
+☸️ **Avvio MongoDB su container docker e creazione utente todo:**  
 Avviare i container con il seguente comando: 
 ``` 
  **docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo** 
@@ -137,12 +139,26 @@ Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il
   
 Per vedere i dati del db dal container mi posso connettere direttamente al container e lanciare i comandi dopo aver ottenuto la shell di mongo (mongosh):  
 ```
-docker exec -it <nome_o_id_del_container> bash
-mongosh
+docker exec -it <nome_o_id_del_container> bash //Per entrare nel container
+mongosh //Per ottenere shell mongo
 show dbs;  // Mostra i database disponibili
-use todolist;  // Passa al database 'todolist' (se esiste)
-db.users.find();  // Esegui una query su una collezione, ad esempio 'users'
+use todolist  // Passa al database 'todolist' (se esiste)
+db.users.find();  // Esegui una query su una collezione, in questo caso 'users'
+```  
+
+Creazione dell'utente **todo** che verrà usato dall'applicazione per connettersi al DB todolist e avrà permessi di lettura e scrittura sul DB todolist:
 ```
+docker exec -it <nome_o_id_del_container> bash //Per entrare nel container
+mongosh //Per ottenere shell mongo
+use admin; // Per entrare nel database admin
+
+// Crea un utente per il database todolist con permessi di lettura  e scrittura
+db.createUser({
+  user: "myUser",   // Nome utente
+  pwd: "myPassword", // Password
+  roles: [ { role: "readWrite", db: "todolist" } ]
+})
+``` 
 ---
 
 :rocket: **Come avviare l'applicazione:**  

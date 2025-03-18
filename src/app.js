@@ -3,15 +3,13 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const helmet = require('helmet');
-const cors = require('cors');
 const fs = require('fs');
 
 dotenv.config();
 const app = express();
 
 // Configurazione Passport
-require('../config/passport'); 
+require('../config/passport');
 
 // Connetti a MongoDB con opzioni di sicurezza
 mongoose.connect(process.env.MONGODB_URI, {
@@ -24,9 +22,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     .then(() => console.log('Database connesso in sicurezza!'))
     .catch(err => console.error('Errore di connessione al database:', err));
 
-// Middleware di sicurezza
-app.use(helmet()); // Protegge da vulnerabilità comuni
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN, credentials: true })); // Restringe le richieste solo da domini fidati
+// Importa le rotte per la gestione delle attività
+const todoRoutes = require('../route/todoRoutes');
 
 // Configura Express per servire file statici
 app.use(express.static('public'));
@@ -35,9 +32,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Configura la sessione con sicurezza avanzata
-app.use(session({ 
-    secret: process.env.SESSION_SECRET, 
-    resave: false, 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
     saveUninitialized: false,
     cookie: {
         httpOnly: true,   // Previene accesso ai cookie via JavaScript
@@ -67,13 +64,16 @@ app.get('/login', (req, res) => res.render('login'));
 
 // Autenticazione Google
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', 
+app.get('/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => res.redirect('/')
 );
 app.get('/logout', (req, res) => {
     req.logout(() => res.redirect('/'));
 });
+
+// Aggiungi le rotte delle attività (todolist)
+app.use('/todo', todoRoutes); // Importa le rotte di /todo da 'todoRoutes.js'
 
 // Avvio del server
 const PORT = process.env.PORT || 3000;
