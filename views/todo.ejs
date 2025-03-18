@@ -4,31 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+        h1 {
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            border: none;
+        }
+        .logout-btn { background-color: #d9534f; color: white; }
+        .add-btn { background-color: #28a745; color: white; }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .todo-container { margin-top: 20px; text-align: left; }
+        ul { list-style-type: none; padding: 0; }
+        li {
+            background: #eee;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .completed { text-decoration: line-through; color: gray; }
+        .add-task { margin-top: 10px; display: flex; justify-content: space-between; }
+        .task-input {
+            width: 70%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .import-export-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .import-export-container form {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        /* Custom styles for file input */
+        .file-input-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            margin-bottom: 20px;
+            width: 300px;
+            margin: 0 auto;
+        }
+        .file-input-container label {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff; /* Blue for 'Choose File' button */
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .file-input-container input[type="file"] {
+            display: none; /* Hide the default file input field */
+        }
+        .file-input-container .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-input-container .file-name.no-file {
+            color: #888;
+            font-style: italic;
+        }
+
+        .file-input-container .file-name.has-file {
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Colori personalizzati per i tasti Importa e Esporta */
+        .import-btn {
+            background-color: #007bff; /* Colore blu */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .export-btn {
+            background-color: #28a745; /* Colore verde */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Effetto hover per i tasti */
+        .import-btn:hover {
+            background-color: #0056b3; /* Blu scuro al passaggio del mouse */
+        }
+
+        .export-btn:hover {
+            background-color: #218838; /* Verde scuro al passaggio del mouse */
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Benvenuto <%= user.displayName %></h1>
+    <div class="container">
+        <h1>Benvenuto <%= user.displayName %></h1>
+        <a href="/logout" class="btn logout-btn">Logout</a>
 
-    <form action="/todo/add" method="POST">
-        <input type="text" name="task" placeholder="Aggiungi una nuova attività">
-        <button type="submit">Aggiungi</button>
-    </form>
+        <div class="import-export-container">
+            <h3>Gestisci Lista Attività</h3>
+            
+            <!-- Import Form -->
+            <form action="/todo/import" method="POST" enctype="multipart/form-data">
+                <div class="file-input-container">
+                    <label for="tasksFile">Scegli File</label>
+                    <input type="file" name="tasksFile" id="tasksFile" accept=".json" required>
+                    <div id="file-name" class="file-name no-file">Nessun file caricato</div>
+                </div>
+                <button type="submit" class="btn import-btn">Importa Lista</button>
+            </form>
 
-    <h2>Lista delle Attività</h2>
-    <ul>
-        <% tasks.forEach(task => { %>
-            <li>
-                <%= task.text %> - <%= task.done ? "Completata" : "Non completata" %>
-                <form action="/todo/complete" method="POST">
-                    <input type="hidden" name="taskId" value="<%= task._id %>">
-                    <button type="submit" <%= task.done ? "disabled" : "" %> >Segna come completata</button>
-                </form>
-                <form action="/todo/delete" method="POST">
-                    <input type="hidden" name="taskId" value="<%= task._id %>">
-                    <button type="submit">Elimina</button>
-                </form>
-            </li>
-        <% }) %>
-    </ul>
+            <!-- Export Form (Download) -->
+            <form action="/todo/export" method="GET">
+                <button type="submit" class="btn export-btn">Esporta Lista</button>
+            </form>
+        </div>
+
+        <div class="todo-container">
+            <h2>Lista delle Attività</h2>
+            <form action="/todo/add" method="POST" class="add-task">
+                <input type="text" name="task" class="task-input" placeholder="Aggiungi una nuova attività">
+                <button type="submit" class="btn add-btn">Aggiungi</button>
+            </form>
+
+            <ul>
+                <% tasks.forEach(task => { %>
+                    <li>
+                        <span class="<%= task.done ? 'completed' : '' %>"><%= task.text %></span>
+                        <div>
+                            <form action="/todo/complete" method="POST" style="display: inline;">
+                                <input type="hidden" name="taskId" value="<%= task._id %>">
+                                <button type="submit" class="btn" <%= task.done ? "disabled" : "" %>>✔️</button>
+                            </form>
+                            <form action="/todo/delete" method="POST" style="display: inline;">
+                                <input type="hidden" name="taskId" value="<%= task._id %>">
+                                <button type="submit" class="delete-btn">🗑️</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript per aggiornare il nome del file scelto
+        document.getElementById('tasksFile').addEventListener('change', function (e) {
+            var fileName = e.target.files[0] ? e.target.files[0].name : 'Nessun file caricato';
+            var fileNameElement = document.getElementById('file-name');
+            if (fileName === 'Nessun file caricato') {
+                fileNameElement.classList.remove('has-file');
+                fileNameElement.classList.add('no-file');
+            } else {
+                fileNameElement.classList.remove('no-file');
+                fileNameElement.classList.add('has-file');
+            }
+            fileNameElement.textContent = fileName;
+        });
+    </script>
 </body>
 </html>
-

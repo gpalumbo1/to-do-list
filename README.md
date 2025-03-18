@@ -43,8 +43,13 @@ to-do-list-google-oauth-2.0/
 │   ├── app.js          # Configurazione Express
 ├── views/				# per i file HTML/EJS
 │   ├── index.ejs       # Pagina principale
+│   ├── todo.ejs        # Pagina Lista
 ├── config/				# per i file di confguraazione
 │   └── passport.js     # Configurazione Passport.js
+├── models/				# 
+│   └── User.js         # 
+├── route/				# 
+│   └── todoRoutes.js   # 
 ├── .env                # Variabili d'ambiente
 ├── .gitignore          # File Git ignorati
 ├── package.json        # File di configurazione NPM
@@ -53,11 +58,22 @@ to-do-list-google-oauth-2.0/
 ---
 
 📘 **Rotte principali:**
-- GET /: Home page.
-- GET /login: Pagina di login.
-- GET /auth/google: Avvia l'autenticazione con Google.
-- GET /auth/google/callback: Callback dopo l'autenticazione.
-- GET /logout: Disconnette l'utente.
+**Rotte di Autenticazione (Auth)**
+| Metodo        | Percorso              | Descrizione |
+| ------------- | -------------         | ----------- |
+| GET           | /                     | Home page   |
+| GET           | /auth/google          | Avvia l'autenticazione con Google. |
+| GET           | /auth/google/callback | Callback dopo l'autenticazione.   |
+| POST          | /logout               | Effettua il logout dell'utente    |
+
+Rotte per la Gestione delle Attività (Todo)
+Metodo	Percorso	Descrizione
+GET	/todo	Mostra la lista delle attività dell'utente
+POST	/todo/add	Aggiungi una nuova attività alla lista
+POST	/todo/complete	Completa un'attività
+POST	/todo/delete	Elimina un'attività
+GET	/todo/export	Esporta la lista delle attività in formato JSON
+POST	/todo/import	Importa una lista di attività da un file JSON
 
 ---
 
@@ -76,6 +92,7 @@ npm install express passport passport-google-oauth20 dotenv ejs
 npm install express
 npm install express-session
 npm install mongoose
+npm install multer
 ```
 ---
 
@@ -109,6 +126,19 @@ Operazioni principali:
 ![Logo](Google-credential.png)
 
 ---
+☸️ **Avvio MongoDB su container docker:**
+Avviare i container con il seguente comando: **docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo**  
+Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il primo inserimento di dati.  
+  
+Per vedere i dati del db dal container mi posso connettere direttamente al container e anciare i comandi da mongo shell (mongosh):  
+```
+docker exec -it <nome_o_id_del_container> bash
+mongosh
+show dbs;  // Mostra i database disponibili
+use todolist;  // Passa al database 'todolist' (se esiste)
+db.users.find();  // Esegui una query su una collezione, ad esempio 'users'
+```
+---
 
 :rocket: **Come avviare l'applicazione:**  
 Da terminale, lanciare: **node src/app.js**
@@ -121,6 +151,8 @@ Da terminale, lanciare: **node src/app.js**
 - **Man-in-the-Middle (MITM):** L'assenza di HTTPS espone le comunicazioni, inclusi i token OAuth, a potenziali intercettazioni.
 - **Replay Attack:** OAuth 2.0, utilizzato da Passport.js, offre protezione contro attacchi di tipo replay grazie a token temporanei e autorizzazioni basate su scope. Tuttavia, senza gestione delle sessioni e revoca dei token, un token compromesso potrebbe essere riutilizzato.
 - **Session Hijacking:** Senza una corretta configurazione dei cookie di sessione (HttpOnly, Secure, SameSite), questi possono essere vulnerabili a furti tramite XSS o intercettazioni di rete.
+- caricare file json sicuro??!!!!!!!!!!!!!!!!
+- qaosa al db??!!!!!!!!!!!!!!!!!!!!!
 
 ✅ **Soluzioni Implementate:**
 - **Man-in-the-Middle:** Abilitato l'uso obbligatorio di HTTPS per proteggere le comunicazioni.

@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 const app = express();
 
 dotenv.config();
-require('../config/passport'); // Configura Passport
+require('../config/passport'); // Configurazione Passport
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Database connesso!'))
