@@ -57,23 +57,24 @@ to-do-list-google-oauth-2.0/
 ```
 ---
 
-📘 **Rotte principali:**
+📘 **Rotte principali:**  
 **Rotte di Autenticazione (Auth)**
 | Metodo        | Percorso              | Descrizione |
 | ------------- | -------------         | ----------- |
 | GET           | /                     | Home page   |
-| GET           | /auth/google          | Avvia l'autenticazione con Google. |
-| GET           | /auth/google/callback | Callback dopo l'autenticazione.   |
-| POST          | /logout               | Effettua il logout dell'utente    |
-
-Rotte per la Gestione delle Attività (Todo)
-Metodo	Percorso	Descrizione
-GET	/todo	Mostra la lista delle attività dell'utente
-POST	/todo/add	Aggiungi una nuova attività alla lista
-POST	/todo/complete	Completa un'attività
-POST	/todo/delete	Elimina un'attività
-GET	/todo/export	Esporta la lista delle attività in formato JSON
-POST	/todo/import	Importa una lista di attività da un file JSON
+| GET           | /auth/google          | Avvia l'autenticazione con Google |
+| GET           | /auth/google/callback | Callback dopo l'autenticazione |
+| POST          | /logout               | Effettua il logout dell'utente |
+  
+**Rotte per la Gestione delle Attività (Todo)**  
+| Metodo        | Percorso              | Descrizione |
+| ------------- | -------------         | ----------- |
+| GET           | /todo                 | Mostra la lista delle attività dell'utente |
+| POST          | /todo/add             | Aggiunge una nuova attività alla lista |
+| POST          | /todo/complete        | Marca come "completata" un'attività |
+| POST          | /todo/delete          | Elimina un'attività dalla lista |
+| GET           | /todo/export          | Esporta la lista delle attività in formato JSON |
+| POST          | /todo/import          | Importa una lista di attività da un file JSON   |
 
 ---
 
@@ -87,12 +88,12 @@ POST	/todo/import	Importa una lista di attività da un file JSON
 
 📦 **Installazione delle dipendenze:**
 ```
-npm init -y
-npm install express passport passport-google-oauth20 dotenv ejs
-npm install express
-npm install express-session
-npm install mongoose
-npm install multer
+npm init -y                     # Inizializza un nuovo progetto Node.js con le impostazioni predefinite creando automaticamente un file package.json
+npm install express passport passport-google-oauth20 dotenv ejs  # Installa Express (server), Passport (autenticazione), Google OAuth, dotenv (variabili ambiente) ed EJS (template engine)  
+npm install express             # Installa Express.js (server web)  
+npm install express-session     # Installa express-session (gestione delle sessioni)  
+npm install mongoose            # Installa Mongoose (gestione database MongoDB)  
+npm install multer              # Installa Multer (gestione upload di file)  
 ```
 ---
 
