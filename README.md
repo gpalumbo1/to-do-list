@@ -19,9 +19,9 @@ L'applicazione è sviluppata con Node.js e utilizza Passport.js per gestire il l
 ---
 
 🧑‍💻 **Ambienti Utilizzati:**
-- WSL Ubuntu.
-- Visual Studio Code.
-- Docker.
+- WSL Ubuntu             # Permette di eseguire un ambiente Linux su Windows
+- Visual Studio Code     # Editor di codice leggero e potente
+- Docker                 # Crea e gestisce container per eseguire applicazioni in ambienti isolati
 
 ---
 
@@ -39,21 +39,22 @@ L'applicazione è sviluppata con Node.js e utilizza Passport.js per gestire il l
 📂 **Struttura del progetto:**
 ```
 to-do-list-google-oauth-2.0/
-├── src/				  # per il codice sorgente
-│   ├── app.js          # Configurazione Express
-├── views/				# per i file HTML/EJS
-│   ├── index.ejs       # Pagina principale
-│   ├── todo.ejs        # Pagina Lista
-├── config/				# per i file di confguraazione
-│   └── passport.js     # Configurazione Passport.js
-├── models/				# 
-│   └── User.js         # 
-├── route/				# 
-│   └── todoRoutes.js   # 
-├── .env                # Variabili d'ambiente
-├── .gitignore          # File Git ignorati
-├── package.json        # File di configurazione NPM
-└── README.md           # Documentazione
+├── src/				# Contiene il codice sorgente principale
+│   ├── app.js           # Configurazione Express, gestione delle rotte principali (Auth) e avvio del server
+├── views/				# Contiene i file dei template HTML/EJS per il rendering lato server
+│   ├── index.ejs        # Pagina principale con accesso e interfaccia utente
+│   ├── todo.ejs         # Pagina per la gestione della lista To-Do dell'utente
+├── config/				# Contiene i file di configurazione dell'applicazione
+│   └── passport.js      # Configurazione di Passport.js per l'autenticazione con Google OAuth 2.0
+├── models/				# Contiene i modelli Mongoose per la gestione dei dati
+│   └── User.js          # Modello Mongoose per gli utenti, gestisce ID Google, email e altri dati
+├── route/				# Contiene i file delle rotte per organizzare meglio il codice
+│   └── todoRoutes.js    # Gestisce le rotte relative alla lista To-Do
+├── .env                # Variabili d'ambiente per la configurazione dell'app (es. MongoDB URI, API keys)
+├── .gitignore          # Esclude file sensibili e cartelle non necessarie dal repository Git
+├── package.json        # File di configurazione NPM con le dipendenze del progetto
+├── package-lock.json   # Blocca le versioni esatte delle dipendenze installate
+└── README.md           # Documentazione del progetto con istruzioni per l'installazione e l'uso
 ```
 ---
 
@@ -100,20 +101,20 @@ npm install multer              # Installa Multer (gestione upload di file)
 🔧 **Configurazione delle variabili d'ambiente**:  
 In un file .env aggiungere le seguenti entry:
 ```
-PORT=3000
-GOOGLE_CLIENT_ID=<Il-tuo-Client-ID>
-GOOGLE_CLIENT_SECRET=<Il-tuo-Client-Secret>
-SESSION_SECRET=<Un-segreto-casuale>
-MONGODB_URI=mongodb://localhost:27017/todolist
+PORT=3000                                       # Porta su cui gira il server Express
+GOOGLE_CLIENT_ID=<Client-ID>                    # ID client di Google OAuth 2.0
+GOOGLE_CLIENT_SECRET=<Client-Secret>            # Secret client di Google OAuth 2.0
+SESSION_SECRET=<Un-segreto-casuale>             # Chiave segreta per la gestione delle sessioni
+MONGODB_URI=mongodb://localhost:27017/todolist  # URI per connettersi al database MongoDB locale
 ```
 ---
 
 📂 **File ignorati:** (.gitignore)
-- node_modules/
-- .env
-- package.json
-- package-lock.json
-- data/
+- node_modules/             # Cartella dei pacchetti Node.js (non serve nel repo, si installa con npm install)
+- .env                      # File delle variabili d'ambiente
+- package.json              # File di configurazione NPM con le dipendenze del progetto (può essere ricreato con npm install)
+- package-lock.json         # Blocca le versioni esatte delle dipendenze installate (può essere ricreato con npm install)
+- data/                     # Volume montato con Docker per salvare i dati del database
 
 ---
 
@@ -127,11 +128,14 @@ Operazioni principali:
 ![Logo](Google-credential.png)
 
 ---
-☸️ **Avvio MongoDB su container docker:**
-Avviare i container con il seguente comando: **docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo**  
-Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il primo inserimento di dati.  
+☸️ **Avvio MongoDB su container docker:**  
+Avviare i container con il seguente comando: 
+``` 
+ **docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo** 
+ ``` 
+Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il primo inserimento di dati.    
   
-Per vedere i dati del db dal container mi posso connettere direttamente al container e anciare i comandi da mongo shell (mongosh):  
+Per vedere i dati del db dal container mi posso connettere direttamente al container e lanciare i comandi dopo aver ottenuto la shell di mongo (mongosh):  
 ```
 docker exec -it <nome_o_id_del_container> bash
 mongosh
@@ -152,10 +156,12 @@ Da terminale, lanciare: **node src/app.js**
 - **Man-in-the-Middle (MITM):** L'assenza di HTTPS espone le comunicazioni, inclusi i token OAuth, a potenziali intercettazioni.
 - **Replay Attack:** OAuth 2.0, utilizzato da Passport.js, offre protezione contro attacchi di tipo replay grazie a token temporanei e autorizzazioni basate su scope. Tuttavia, senza gestione delle sessioni e revoca dei token, un token compromesso potrebbe essere riutilizzato.
 - **Session Hijacking:** Senza una corretta configurazione dei cookie di sessione (HttpOnly, Secure, SameSite), questi possono essere vulnerabili a furti tramite XSS o intercettazioni di rete.
-- caricare file json sicuro??!!!!!!!!!!!!!!!!
-- qaosa al db??!!!!!!!!!!!!!!!!!!!!!
+- **File Upload Vulnerabilities:** Un attaccante potrebbe caricare un file dannoso (es. script, eseguibili) per compromettere il sistema.
+- **Database Security:** Se il database non è protetto correttamente, può essere esposto a rischi di accesso non autorizzato e data breaches.
 
 ✅ **Soluzioni Implementate:**
-- **Man-in-the-Middle:** Abilitato l'uso obbligatorio di HTTPS per proteggere le comunicazioni.
-- **Replay Attack:** Implementata una durata breve per i token e revoca automatica dopo il logout.
-- **Session Hijacking:** Configurati i cookie di sessione con i flag HttpOnly, Secure, SameSite e impostata una durata limitata per le sessioni.
+- **Man-in-the-Middle:** NON implementato poichè è usato in locale. Andrebbe generato un certificato ed esposto in HTTPS.
+- **Replay Attack:** Implementata una durata breve per i token e revoca automatica dopo il logout. File: app.js, config/passport.js
+- **Session Hijacking:** Configurati i cookie di sessione con i flag HttpOnly, Secure, SameSite e impostata una durata limitata per le sessioni. File: app.js
+- **File Upload Vulnerabilities:** Verifica il tipo di file (solo .json) e utilizza una libreria per validare il contenuto del file prima di processarlo. File: todoRoutes.js (Gestione dei file importati)
+- **Database Security:** Usare variabili d'ambiente per memorizzare le credenziali di accesso e proteggere il database da accessi esterni non autorizzati. File: app.js, .env
