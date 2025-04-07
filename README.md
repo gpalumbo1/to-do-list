@@ -140,8 +140,8 @@ Operazioni principali:
 ☸️ **Avvio MongoDB su container docker e creazione utente todo:**  
 Avviare i container con il seguente comando: 
 ``` 
- **docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo** 
- ``` 
+ docker run -d -p 27017:27017 --name mongodb -v /your/local/path:/data/db mongo
+``` 
 Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il primo inserimento di dati.    
   
 Per vedere i dati del db dal container mi posso connettere direttamente al container e lanciare i comandi dopo aver ottenuto la shell di mongo (mongosh):  
