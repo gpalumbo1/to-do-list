@@ -1,8 +1,10 @@
 # TO-DO-LIST Google-OAuth-2.0 - Giuseppe Palumbo
 
 ## Introduzione:
-La seguente applicazione web permette di creare, scaricare e importare una lista con la possibilità di aggiungere o eliminare elementi.I dati della lista vengono salvati in un database MongoDB, il che garantisce la persistenza dei dati tra sessioni e dispositivi diversi.
-
+La seguente applicazione web permette di creare, scaricare e importare una lista con la possibilità di aggiungere o eliminare elementi. I dati della lista vengono salvati in un database MongoDB, il che garantisce la persistenza dei dati tra sessioni e dispositivi diversi.
+ 
+![alt text](<Schermata app.png>)
+ 
 Per accedere alla web app, è necessario autenticarsi tramite Google OAuth 2.0.
 L'applicazione è sviluppata con Node.js e utilizza Passport.js per gestire il login federato con Google.
 
