@@ -60,7 +60,7 @@ to-do-list-google-oauth-2.0/
 
 📊 **Flowchart:**  
   
-![alt text](Flowchart.drawio.png)]
+![alt text](Flowchart.drawio.png)
 
 ---
 📘 **Rotte principali:**  
