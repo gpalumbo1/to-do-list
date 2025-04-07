@@ -58,6 +58,10 @@ to-do-list-google-oauth-2.0/
 ```
 ---
 
+📊 **Flowchart:**
+![alt text](Flowchart.drawio.png)]
+
+---
 📘 **Rotte principali:**  
 **Rotte di Autenticazione (Auth)**
 | Metodo        | Percorso              | Descrizione |
