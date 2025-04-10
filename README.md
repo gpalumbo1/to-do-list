@@ -183,7 +183,7 @@ Da terminale, lanciare: **node src/app.js**
 - **Database Security:** Se il database non è protetto correttamente, può essere esposto a rischi di accesso non autorizzato e data breaches.
 
 ✅ **Soluzioni Implementate:**
-- **Man-in-the-Middle:** NON implementato poichè è usato in locale. Andrebbe generato un certificato ed esposto in HTTPS.
+- **Man-in-the-Middle:** Non implementato in quanto l'applicazione è utilizzata esclusivamente in locale. Per un utilizzo in produzione o su rete pubblica, sarebbe necessario generare un certificato SSL/TLS ed esporre l'applicazione tramite HTTPS.
 - **Replay Attack:** Implementata una durata breve per i token e revoca automatica dopo il logout. File: app.js, config/passport.js
 - **Session Hijacking:** Configurati i cookie di sessione con i flag HttpOnly, Secure, SameSite e impostata una durata limitata per le sessioni. File: app.js
 - **File Upload Vulnerabilities:** Verifica il tipo di file (solo .json) e utilizza una libreria per validare il contenuto del file prima di processarlo. File: todoRoutes.js (Gestione dei file importati)
