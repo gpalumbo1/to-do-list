@@ -147,19 +147,19 @@ Se il database non esiste, MongoDB lo creerà automaticamente quando ci sarà il
 Per vedere i dati del db dal container mi posso connettere direttamente al container e lanciare i comandi dopo aver ottenuto la shell di mongo (mongosh):  
 ```
 docker exec -it <nome_o_id_del_container> bash //Per entrare nel container
-mongosh //Per ottenere shell mongo
+mongosh //Per ottenere la shell mongo
 show dbs;  // Mostra i database disponibili
 use todolist  // Passa al database 'todolist'
-db.users.find();  // Esegui una query su una collezione, in questo caso 'users'
+db.users.find();  // Esegue una query su una collezione, in questo caso 'users'
 ```  
 
 Creazione dell'utente **todo** che verrà usato dall'applicazione per connettersi al DB todolist e avrà permessi di lettura e scrittura sul DB todolist:
 ```
 docker exec -it <nome_o_id_del_container> bash //Per entrare nel container
-mongosh //Per ottenere shell mongo
+mongosh //Per ottenere ls shell mongo
 use admin; // Per entrare nel database admin
 
-// Crea un utente per il database todolist con permessi di lettura  e scrittura
+// Crea un utente per il database todolist con permessi di lettura e scrittura
 db.createUser({
   user: "myUser",   // Nome utente
   pwd: "myPassword", // Password
