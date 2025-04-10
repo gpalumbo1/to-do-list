@@ -15,7 +15,7 @@ L'applicazione è sviluppata con Node.js e utilizza Passport.js per gestire il l
 2. Passport.js reindirizza l'utente al server di Google per l'autenticazione OAuth.
 3. Google autentica l'utente e reindirizza al callbackURL con un authorization code.
 4. Passport.js scambia il codice con un access token e un ID token.
-5. Passport.js recupera il profilo dell'utente e lo salva nella sessione (o in un database, se configurato).
+5. Passport.js recupera il profilo dell'utente e lo salva nel database.
 6. L'utente autenticato può ora accedere alle funzionalità dell'applicazione.
 
 ---
@@ -132,7 +132,7 @@ Operazioni principali:
 - Creazione di un progetto su Google Cloud.
 - Abilitazione dell'API.
 - Generazione delle credenziali OAuth 2.0 (Client ID e Client Secret) per un applicazione web.
-- Configurazione dei Redirect URI, includendo http://localhost:3000/auth/google/callback per l'ambiente di sviluppo.
+- Configurazione dei Redirect URI, includendo http://localhost:3000/auth/google/callback
 
 ![Logo](Google-credential.png)
 
@@ -149,7 +149,7 @@ Per vedere i dati del db dal container mi posso connettere direttamente al conta
 docker exec -it <nome_o_id_del_container> bash //Per entrare nel container
 mongosh //Per ottenere shell mongo
 show dbs;  // Mostra i database disponibili
-use todolist  // Passa al database 'todolist' (se esiste)
+use todolist  // Passa al database 'todolist'
 db.users.find();  // Esegui una query su una collezione, in questo caso 'users'
 ```  
 
