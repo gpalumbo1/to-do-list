@@ -87,8 +87,8 @@ to-do-list-google-oauth-2.0/
 ---
 
 :gear: **Prerequisiti:**
-- [Node.js](https://nodejs.org/) (v14 o successiva)
-- [NPM](https://www.npmjs.com/)
+- Node.js (v14 o successiva)
+- NPM
 - Un account su [Google Cloud Console](https://console.cloud.google.com/).
 - Docker (per eseguire MongoDB tramite container)
 
